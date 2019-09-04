@@ -2,13 +2,13 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Movie, Rating
-from .test_resources import camel_case_details, snake_case_details
+from .test_resources import expected_external_api_response, expected_api_response, save_test_movie
 
 
 class MovieModelTests(TestCase):
 
     def test_movie_create(self):
-        """ Test if movie details are properly mapped """
+        """ Testing if movie details are properly mapped. """
         details_provider = MockMovieDetailsProvider()
         details = details_provider.get_details()
         movie_attrs = ["title", "year", "rated", "released", "runtime", "genre", "director",
@@ -27,8 +27,8 @@ class MovieModelTests(TestCase):
             except AttributeError:
                 self.fail(f"movie has no attribute {m}")
 
-
     def test_related_ratings_after_movie_create(self):
+        """ Testing if movie ratings are properly mapped to Rating objects. """
         details_provider = MockMovieDetailsProvider()
         details = details_provider.get_details()
         movie = Movie.create("It", details_provider)
@@ -46,8 +46,8 @@ class MovieModelTests(TestCase):
 
     @staticmethod
     def create_rating_out_of_details(details, index):
-        return Rating.objects.get(source=details["Ratings"][index]["Source"],
-                                  value=details["Ratings"][index]["Value"])
+        return Rating(source=details["Ratings"][index]["Source"],
+                      value=details["Ratings"][index]["Value"])
 
 
 class MovieViewTests(APITestCase):
@@ -62,6 +62,7 @@ class MovieViewTests(APITestCase):
         Movie.default_detail_provider = details_provider
 
     def test_movie_creation_after_post(self):
+        """ If movie title is POSTed for the first time object should be created. """
         data = {'title': 'It'}
         self.client.post(self.get_url(), data, format='json')
         self.assertEqual(len(Movie.objects.all()), 1)
@@ -73,23 +74,39 @@ class MovieViewTests(APITestCase):
             self.fail(msg="Movie with given title was created multiple times.")
 
     def test_response_after_first_movie_post(self):
+        """ If movie title is POSTed for the first time object should be created
+            and movie details with it's ID should be sent in response. """
         data = {'title': 'It'}
-        expected_response = snake_case_details
+        expected_response = expected_api_response
         response = self.client.post(self.get_url(), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, expected_response)
+        try:
+            Movie.objects.get(title="It")
+            self.assertDictEqual(response.data, expected_response)
+        except Movie.DoesNotExist:
+            self.fail(msg="Movie with proper title was not created.")
+        except Rating.MultipleObjectsReturned:
+            self.fail(msg="Movie with given title was created multiple times.")
 
     def test_response_after_another_movie_post(self):
+        """ If movie with title provided in POST request already exists
+            in the database it's details and ID should be sent in response. """
         data = {'title': 'It'}
-        expected_response = snake_case_details
+        expected_response = expected_api_response
         first_response = self.client.post(self.get_url(), data, format='json')
         self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
         another_response = self.client.post(self.get_url(), data, format='json')
-        self.assertEqual(another_response .status_code, status.HTTP_200_OK)
+        self.assertEqual(another_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(Movie.objects.all()), 1)
-        self.assertEqual(another_response .data, expected_response)
+        self.assertDictEqual(another_response.data, expected_response)
+
+    def test_movies_get(self):
+        """ If GET request is received list of all movies should be returned. """
+        save_test_movie()
+        response = self.client.get(self.get_url(), format='json')
+        self.assertEqual(response.data, expected_api_response)
 
 
 class MockMovieDetailsProvider:
     def get_details(self):
-        return camel_case_details
+        return expected_external_api_response

@@ -12,7 +12,7 @@ class Movie(models.Model):
         pass
 
     title = models.CharField(max_length=long)
-    year = models.IntegerField
+    year = models.IntegerField()
     rated = models.CharField(max_length=short)
     released = models.CharField(max_length=medium)
     runtime = models.CharField(max_length=medium)
@@ -25,9 +25,9 @@ class Movie(models.Model):
     country = models.CharField(max_length=medium)
     awards = models.CharField(max_length=medium)
     poster = models.CharField(max_length=long)
-    metascore = models.IntegerField
-    imdb_rating = models.DecimalField
-    imdb_votes = models.IntegerField
+    metascore = models.IntegerField()
+    imdb_rating = models.DecimalField(decimal_places=1, max_digits=4)
+    imdb_votes = models.IntegerField()
     imdb_id = models.CharField(max_length=medium)
     type = models.CharField(max_length=medium)
     dvd = models.CharField(max_length=medium)
@@ -37,12 +37,12 @@ class Movie(models.Model):
 
 
 class Rating(models.Model):
-    movie_id = models.ForeignKey(to=Movie, on_delete=models.CASCADE)
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
     source = models.CharField(max_length=medium)
     value = models.CharField(max_length=short)
 
 
 class Comment(models.Model):
-    movie_id = models.ForeignKey(to=Movie, on_delete=models.CASCADE)
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
     created_date = models.DateField(auto_now_add=True)
-    text = models.TextField
+    text = models.TextField()
