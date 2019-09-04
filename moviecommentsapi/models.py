@@ -9,7 +9,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=long)
     year = models.IntegerField
     rated = models.CharField(max_length=short)
-    released = models.DateField
+    released = models.CharField(max_length=medium)
     runtime = models.CharField(max_length=medium)
     genre = models.CharField(max_length=medium)
     director = models.CharField(max_length=long)
@@ -25,7 +25,7 @@ class Movie(models.Model):
     imdb_votes = models.IntegerField
     imdb_id = models.CharField(max_length=medium)
     type = models.CharField(max_length=medium)
-    dvd = models.DateField
+    dvd = models.CharField(max_length=medium)
     box_office = models.CharField(max_length=medium)
     production = models.CharField(max_length=medium)
     website = models.CharField(max_length=long)
