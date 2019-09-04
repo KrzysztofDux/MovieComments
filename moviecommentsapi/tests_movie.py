@@ -8,7 +8,7 @@ class MovieModelTests(TestCase):
     def test_movie_create(self):
         """ Testing if movie details are properly mapped. """
         details_provider = MockMovieDetailsProvider()
-        details = details_provider.get_details()
+        details = details_provider.get_details(None)
         movie_attrs = ["title", "year", "rated", "released", "runtime", "genre", "director",
                        "writer", "actors", "plot", "language", "country", "awards", "poster",
                        "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
@@ -28,7 +28,7 @@ class MovieModelTests(TestCase):
     def test_related_ratings_after_movie_create(self):
         """ Testing if movie ratings are properly mapped to Rating objects. """
         details_provider = MockMovieDetailsProvider()
-        details = details_provider.get_details()
+        details = details_provider.get_details(None)
         movie = Movie.create("It", details_provider)
         try:
             r0 = self.get_rating_with_details(details, 0)
