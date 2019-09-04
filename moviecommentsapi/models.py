@@ -6,6 +6,11 @@ short, medium, long = 10, 50, 300
 
 
 class Movie(models.Model):
+    default_detail_provider = None
+
+    def create(self, title, detail_provider=default_detail_provider):
+        pass
+
     title = models.CharField(max_length=long)
     year = models.IntegerField
     rated = models.CharField(max_length=short)
