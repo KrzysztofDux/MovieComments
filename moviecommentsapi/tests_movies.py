@@ -46,7 +46,7 @@ class MovieModelTests(TestCase):
 
     @staticmethod
     def get_rating_with_details(details, index):
-        return Rating.object.get(source=details["Ratings"][index]["Source"],
+        return Rating.objects.get(source=details["Ratings"][index]["Source"],
                       value=details["Ratings"][index]["Value"])
 
 
