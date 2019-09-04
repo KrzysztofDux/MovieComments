@@ -1,6 +1,5 @@
 from .models import Movie, Rating
 
-
 expected_external_api_response = {
     "Title": "It",
     "Year": "2017",
@@ -128,6 +127,5 @@ def save_test_movie():
 
 
 class MockMovieDetailsProvider:
-    def get_details(self):
+    def get_details(self, movie):
         return expected_external_api_response
-

@@ -55,7 +55,7 @@ class MoviesViewTests(APITestCase):
         self.assertDictEqual(another_response.data, expected_response)
 
     def test_movies_get(self):
-        """ If GET request is received list of all movies should be returned. """
+        """ If GET request is received, list of all movies should be returned. """
         save_test_movie()
         response = self.client.get(self.get_url(), format='json')
         self.assertEqual(response.data, expected_api_response)
