@@ -33,9 +33,9 @@ class MovieModelTests(TestCase):
         details = details_provider.get_details()
         movie = Movie.create("It", details_provider)
         try:
-            r0 = self.create_rating_out_of_details(details, 0)
-            r1 = self.create_rating_out_of_details(details, 1)
-            r2 = self.create_rating_out_of_details(details, 2)
+            r0 = self.get_rating_with_details(details, 0)
+            r1 = self.get_rating_with_details(details, 1)
+            r2 = self.get_rating_with_details(details, 2)
             self.assertIn(r0, movie.rating_set.all())
             self.assertIn(r1, movie.rating_set.all())
             self.assertIn(r2, movie.rating_set.all())
@@ -45,8 +45,8 @@ class MovieModelTests(TestCase):
             self.fail(msg="Rating for movie created more than once.")
 
     @staticmethod
-    def create_rating_out_of_details(details, index):
-        return Rating(source=details["Ratings"][index]["Source"],
+    def get_rating_with_details(details, index):
+        return Rating.object.get(source=details["Ratings"][index]["Source"],
                       value=details["Ratings"][index]["Value"])
 
 
