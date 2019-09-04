@@ -31,11 +31,13 @@ class Movie(models.Model):
     website = models.CharField(max_length=long)
 
 
-class Ratings(models.Model):
+class Rating(models.Model):
     movie_id = models.ForeignKey(to=Movie, on_delete=models.CASCADE)
     source = models.CharField(max_length=medium)
     value = models.CharField(max_length=short)
 
 
 class Comment(models.Model):
+    movie_id = models.ForeignKey(to=Movie, on_delete=models.CASCADE)
     created_date = models.DateField(auto_now_add=True)
+    text = models.TextField
