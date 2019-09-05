@@ -1,11 +1,11 @@
 from django.test import TestCase
-from .models import Movie, Rating
+from ..models import Movie, Rating
 from .test_resources import MockMovieDetailsProvider
 
 
 class MovieModelTests(TestCase):
 
-    def test_movie_create(self):
+    def test_movie_details_create(self):
         """ Testing if movie details are properly mapped. """
         details_provider = MockMovieDetailsProvider()
         details = details_provider.get_details(None)
@@ -13,15 +13,15 @@ class MovieModelTests(TestCase):
                        "writer", "actors", "plot", "language", "country", "awards", "poster",
                        "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
                        "box_office", "production", "website"]
-        details_attr = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director",
-                        "Writer", "Actors", "Plot", "Language", "Country", "Awards", "poster",
+        details_attrs = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director",
+                        "Writer", "Actors", "Plot", "Language", "Country", "Awards", "Poster",
                         "Metascore", "imdbRating", "imdbVotes", "imdbID", "Type", "DVD",
                         "BoxOffice", "Production", "Website"]
         movie = Movie.create("It", details_provider)
-        for m, d in zip(movie_attrs, details_attr):
+        for m, d in zip(movie_attrs, details_attrs):
             try:
                 movie_attr = getattr(movie, m)
-                self.assertEqual(movie_attr, details[d])
+                self.assertEqual(str(movie_attr), details[d])
             except AttributeError:
                 self.fail(f"movie has no attribute {m}")
 
@@ -34,9 +34,9 @@ class MovieModelTests(TestCase):
             r0 = self.get_rating_with_details(details, 0)
             r1 = self.get_rating_with_details(details, 1)
             r2 = self.get_rating_with_details(details, 2)
-            self.assertIn(r0, movie.rating_set.all())
-            self.assertIn(r1, movie.rating_set.all())
-            self.assertIn(r2, movie.rating_set.all())
+            self.assertIn(r0, movie.ratings.all())
+            self.assertIn(r1, movie.ratings.all())
+            self.assertIn(r2, movie.ratings.all())
         except Rating.DoesNotExist:
             self.fail(msg="Rating for movie not created.")
         except Rating.MultipleObjectsReturned:
