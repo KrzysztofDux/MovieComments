@@ -54,6 +54,16 @@ class Rating(models.Model):
 
 
 class Comment(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    @staticmethod
+    def for_movie(movie):
+        breakpoint()
+        return list(Comment.objects.filter(movie_id=movie.pk))
+
+    @staticmethod
+    def for_movie_in_range(movie, date_from, date_to):
+        pass
+
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateField(auto_now_add=True)
     text = models.TextField()
