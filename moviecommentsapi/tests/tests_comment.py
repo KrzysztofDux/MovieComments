@@ -7,6 +7,10 @@ from .test_resources import get_saved_test_movie
 
 class CommentTests(TestCase):
 
+    def test_comments_for_movie_without_comments(self):
+        movie = get_saved_test_movie()
+        self.assertEqual(len(Comment.for_movie(movie)), 0)
+
     def test_comments_for_movie(self):
         movie = get_saved_test_movie()
         movie.comments.create(text="test comment 0")
