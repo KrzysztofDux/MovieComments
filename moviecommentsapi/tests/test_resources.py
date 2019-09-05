@@ -47,7 +47,8 @@ expected_external_api_response = {
 """ API should return response from external api with additional Id field """
 expected_api_response = {"Id": "6"}
 expected_api_response.update(expected_external_api_response)
-expected_api_response['imdbVotes'] = expected_api_response['imdbVotes'].replace(",", "")
+expected_api_response['imdbVotes'] = expected_api_response['imdbVotes']
+del expected_api_response['Response']
 
 
 def get_saved_test_movie():
@@ -69,22 +70,22 @@ def get_saved_test_movie():
             poster="https://m.media-amazon.com/images/M/MV5BZDVkZmI0YzAtNzdjYi00ZjhhLWE1ODEtMWMzMWMzNDA0NmQ4XkEyXkFqcGdeQXVyNzYzODM3Mzg@._V1_SX300.jpg",
             metascore=69,
             imdb_rating=7.4,
-            imdb_votes=376032,
+            imdb_votes="376,032",
             imdb_id="tt1396484",
             type="movie",
             dvd="09 Jan 2018",
             box_office="$326,898,358",
             production="Warner Bros. Pictures",
             website="http://itthemovie.com/")
-        movie.rating_set.create(
-            source="Metacritic",
-            value="69/100")
-        movie.rating_set.create(
-            source="Rotten Tomatoes",
-            value="86%")
-        movie.rating_set.create(
+        movie.ratings.create(
             source="Internet Movie Database",
             value="7.4/10")
+        movie.ratings.create(
+            source="Rotten Tomatoes",
+            value="86%")
+        movie.ratings.create(
+            source="Metacritic",
+            value="69/100")
     return movie
 
 

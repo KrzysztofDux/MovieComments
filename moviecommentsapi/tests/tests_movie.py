@@ -34,9 +34,9 @@ class MovieModelTests(TestCase):
             r0 = self.get_rating_with_details(details, 0)
             r1 = self.get_rating_with_details(details, 1)
             r2 = self.get_rating_with_details(details, 2)
-            self.assertIn(r0, movie.rating_set.all())
-            self.assertIn(r1, movie.rating_set.all())
-            self.assertIn(r2, movie.rating_set.all())
+            self.assertIn(r0, movie.ratings.all())
+            self.assertIn(r1, movie.ratings.all())
+            self.assertIn(r2, movie.ratings.all())
         except Rating.DoesNotExist:
             self.fail(msg="Rating for movie not created.")
         except Rating.MultipleObjectsReturned:

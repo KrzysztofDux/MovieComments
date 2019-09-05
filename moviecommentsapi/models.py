@@ -48,7 +48,7 @@ class Movie(models.Model):
 
 
 class Rating(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
     source = models.CharField(max_length=medium)
     value = models.CharField(max_length=short)
 
