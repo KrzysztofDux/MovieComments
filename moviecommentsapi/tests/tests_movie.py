@@ -1,11 +1,11 @@
 from django.test import TestCase
-from .models import Movie, Rating
+from ..models import Movie, Rating
 from .test_resources import MockMovieDetailsProvider
 
 
 class MovieModelTests(TestCase):
 
-    def test_movie_create(self):
+    def test_movie_details_create(self):
         """ Testing if movie details are properly mapped. """
         details_provider = MockMovieDetailsProvider()
         details = details_provider.get_details(None)
@@ -21,7 +21,7 @@ class MovieModelTests(TestCase):
         for m, d in zip(movie_attrs, details_attrs):
             try:
                 movie_attr = getattr(movie, m)
-                self.assertEqual(movie_attr, details[d])
+                self.assertEqual(str(movie_attr), details[d])
             except AttributeError:
                 self.fail(f"movie has no attribute {m}")
 

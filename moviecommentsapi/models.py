@@ -38,7 +38,7 @@ class Movie(models.Model):
     poster = models.CharField(max_length=long)
     metascore = models.IntegerField()
     imdb_rating = models.DecimalField(decimal_places=1, max_digits=4)
-    imdb_votes = models.IntegerField()
+    imdb_votes = models.CharField(max_length=medium)
     imdb_id = models.CharField(max_length=medium)
     type = models.CharField(max_length=medium)
     dvd = models.CharField(max_length=medium)

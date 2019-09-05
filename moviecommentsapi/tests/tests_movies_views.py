@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Movie, Rating
+from ..models import Movie, Rating
 from .test_resources import MockMovieDetailsProvider, expected_api_response, get_saved_test_movie
 
 

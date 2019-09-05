@@ -1,9 +1,6 @@
 from django.test import TestCase
-from rest_framework.renderers import JSONRenderer
-
-from .models import Movie, Rating
 from .test_resources import expected_api_response, expected_external_api_response, get_saved_test_movie
-from .serializers import MovieSerializer
+from ..serializers import MovieSerializer
 
 
 class MovieSerializerTests(TestCase):

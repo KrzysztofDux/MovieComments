@@ -39,7 +39,6 @@ class MovieSerializer(serializers.Serializer):
         validated_data['year'] = int(validated_data['year'])
         validated_data['metascore'] = int(validated_data['metascore'])
         validated_data['imdb_rating'] = float(validated_data['imdb_rating'])
-        validated_data['imdb_votes'] = int(validated_data['imdb_votes'].replace(",", ""))
         return Movie.objects.create(**validated_data)
 
     def update(self, instance, validated_data):

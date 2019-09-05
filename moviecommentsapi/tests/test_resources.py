@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from .models import Movie, Rating
+from ..models import Movie, Rating
 
 expected_external_api_response = {
     "Title": "It",
