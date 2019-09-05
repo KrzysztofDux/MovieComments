@@ -13,12 +13,12 @@ class MovieModelTests(TestCase):
                        "writer", "actors", "plot", "language", "country", "awards", "poster",
                        "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
                        "box_office", "production", "website"]
-        details_attr = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director",
+        details_attrs = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director",
                         "Writer", "Actors", "Plot", "Language", "Country", "Awards", "Poster",
                         "Metascore", "imdbRating", "imdbVotes", "imdbID", "Type", "DVD",
                         "BoxOffice", "Production", "Website"]
         movie = Movie.create("It", details_provider)
-        for m, d in zip(movie_attrs, details_attr):
+        for m, d in zip(movie_attrs, details_attrs):
             try:
                 movie_attr = getattr(movie, m)
                 self.assertEqual(movie_attr, details[d])

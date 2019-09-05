@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Movie, Rating
-from .test_resources import MockMovieDetailsProvider, expected_api_response, save_test_movie
+from .test_resources import MockMovieDetailsProvider, expected_api_response, get_saved_test_movie
 
 
 class MoviesViewTests(APITestCase):
@@ -56,6 +56,6 @@ class MoviesViewTests(APITestCase):
 
     def test_movies_get(self):
         """ If GET request is received, list of all movies should be returned. """
-        save_test_movie()
+        get_saved_test_movie()
         response = self.client.get(self.get_url(), format='json')
         self.assertEqual(response.data, expected_api_response)

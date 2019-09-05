@@ -3,7 +3,7 @@ from .models import Movie, Rating, short, medium, long
 
 
 class MovieSerializer(serializers.Serializer):
-    Id = serializers.IntegerField(required=False)
+    Id = serializers.IntegerField(required=False, read_only=True, source="pk")
     Title = serializers.CharField(max_length=long, source="title")
     Year = serializers.CharField(max_length=short, source="year")
     Rated = serializers.CharField(max_length=short, source="rated")
@@ -30,10 +30,10 @@ class MovieSerializer(serializers.Serializer):
 
     class Meta:
         model = Movie
-        fields = ("title", "year", "rated", "released", "runtime", "genre", "director",
-                       "writer", "actors", "plot", "language", "country", "awards", "poster",
-                       "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
-                       "box_office", "production", "website")
+        fields = ("pk", "title", "year", "rated", "released", "runtime", "genre", "director",
+                  "writer", "actors", "plot", "language", "country", "awards", "poster",
+                  "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
+                  "box_office", "production", "website")
 
     def create(self, validated_data):
         validated_data['year'] = int(validated_data['year'])
