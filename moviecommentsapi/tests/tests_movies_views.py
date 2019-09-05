@@ -14,7 +14,7 @@ class MoviesViewTests(APITestCase):
 
     @staticmethod
     def get_url():
-        return '/movies'
+        return '/movies/'
 
     def test_movie_creation_after_post(self):
         """ If movie title is POSTed for the first time object should be created. """

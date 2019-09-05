@@ -2,7 +2,6 @@ import datetime
 from itertools import zip_longest
 
 from django.test import TestCase
-from rest_framework.utils import json
 
 from .test_resources import get_expected_api_response, get_expected_external_api_response, \
     get_saved_test_movie
