@@ -1,16 +1,22 @@
+from django.http import JsonResponse
+from rest_framework import status
 from rest_framework.decorators import api_view
+
+from .models import Movie
+from .serializers import MovieSerializer
 
 
 @api_view(['GET', 'POST'])
 def movies(request):
     if request.method == 'GET':
-        get_movies(request)
+        return get_movies(request)
     elif request.method == 'POST':
-        post_movies(request)
+        return post_movies(request)
 
 
 def get_movies(request):
-    pass
+    ms = MovieSerializer(Movie.objects.all(), many=True)
+    return JsonResponse(ms.data, status=status.HTTP_200_OK, safe=False)
 
 
 def post_movies(request):
@@ -20,9 +26,9 @@ def post_movies(request):
 @api_view(['GET', 'POST'])
 def comments(request):
     if request.method == 'GET':
-        get_movies(request)
+        return get_movies(request)
     elif request.method == 'POST':
-        post_movies(request)
+        return post_movies(request)
 
 
 def get_comments(request):
