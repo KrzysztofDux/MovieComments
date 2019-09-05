@@ -1,15 +1,27 @@
 from django.db import models
 
-
 # CharField max_lengths
 short, medium, long = 10, 50, 300
 
 
 class Movie(models.Model):
-    default_detail_provider = None
+    default_details_provider = None
 
-    def create(self, title, detail_provider=default_detail_provider):
-        pass
+    @classmethod
+    def create(cls, title, details_provider=default_details_provider):
+        try:
+            return cls.__create_movie_with_details_from_provider(title, details_provider)
+        except AttributeError:
+            raise ValueError("details_provider must provide get_details(str) method")
+
+    @staticmethod
+    def __create_movie_with_details_from_provider(title, details_provider):
+        from .serializers import MovieSerializer
+        details = details_provider.get_details(title)
+        serializer = MovieSerializer(data=details)
+        print(serializer.production)
+        serializer.is_valid(True)
+        return serializer.save()
 
     title = models.CharField(max_length=long)
     year = models.IntegerField()

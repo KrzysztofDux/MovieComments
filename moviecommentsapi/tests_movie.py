@@ -14,7 +14,7 @@ class MovieModelTests(TestCase):
                        "metascore", "imdb_rating", "imdb_votes", "imdb_id", "type", "dvd",
                        "box_office", "production", "website"]
         details_attr = ["Title", "Year", "Rated", "Released", "Runtime", "Genre", "Director",
-                        "Writer", "Actors", "Plot", "Language", "Country", "Awards", "poster",
+                        "Writer", "Actors", "Plot", "Language", "Country", "Awards", "Poster",
                         "Metascore", "imdbRating", "imdbVotes", "imdbID", "Type", "DVD",
                         "BoxOffice", "Production", "Website"]
         movie = Movie.create("It", details_provider)

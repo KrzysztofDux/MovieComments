@@ -13,7 +13,7 @@ class MoviesViewTests(APITestCase):
     def setUp(self):
         """ mocking details provider makes tests independent from external API """
         details_provider = MockMovieDetailsProvider()
-        Movie.default_detail_provider = details_provider
+        Movie.default_details_provider = details_provider
 
     def test_movie_creation_after_post(self):
         """ If movie title is POSTed for the first time object should be created. """
