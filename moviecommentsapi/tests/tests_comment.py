@@ -2,8 +2,7 @@ from django.test import TestCase
 import datetime
 
 from ..models import Comment
-from .test_resources import MockMovieDetailsProvider, get_expected_api_response, \
-    get_saved_test_movie
+from .test_resources import get_saved_test_movie
 
 
 class CommentTests(TestCase):
