@@ -3,7 +3,7 @@ from itertools import zip_longest
 from django.test import TestCase
 from rest_framework.utils import json
 
-from .test_resources import expected_api_response, expected_external_api_response, \
+from .test_resources import get_expected_api_response, get_expected_external_api_response, \
     get_saved_test_movie
 from ..serializers import MovieSerializer
 
@@ -16,12 +16,14 @@ class MovieSerializerTests(TestCase):
         movie = get_saved_test_movie()
         movie.save()
         ms = MovieSerializer(movie)
-        self.assertEqual(json.dumps(expected_api_response), json.dumps(ms.data))
+        expected = get_expected_api_response()
+        expected["Id"] = str(movie.pk)
+        self.assertEqual(json.dumps(expected), json.dumps(ms.data))
 
     def test_movie_deserialization(self):
         """ MovieSerializer provided JSON api response should create Movie object
             with correct attributes values and related Rating objects """
-        ms = MovieSerializer(data=expected_external_api_response)
+        ms = MovieSerializer(data=get_expected_external_api_response())
         ms.is_valid()
         movie = ms.save()
         expected = get_saved_test_movie()
