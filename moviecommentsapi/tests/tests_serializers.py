@@ -18,7 +18,7 @@ class MovieSerializerTests(TestCase):
         ms = MovieSerializer(movie)
         expected = get_expected_api_response()
         expected["Id"] = str(movie.pk)
-        self.assertEqual(json.dumps(expected), json.dumps(ms.data))
+        self.assertEqual(json.dumps(ms.data), json.dumps(expected))
 
     def test_movie_deserialization(self):
         """ MovieSerializer provided JSON api response should create Movie object

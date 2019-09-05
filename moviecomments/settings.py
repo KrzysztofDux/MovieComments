@@ -127,3 +127,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+OMDB_URL = 'http://www.omdbapi.com'
+OMDB_KEY = '6e6ef6dd'

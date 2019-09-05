@@ -19,6 +19,7 @@ class Movie(models.Model):
         from .serializers import MovieSerializer
         details = details_provider.get_details(title)
         serializer = MovieSerializer(data=details)
+        breakpoint()
         serializer.is_valid(True)
         return serializer.save()
 
