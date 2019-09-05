@@ -1,6 +1,28 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Movie, Rating, short, medium, long
+from .models import Movie, Rating, Comment, short, medium, long
+
+
+class CommentSerializer(serializers.Serializer):
+    MovieId = serializers.PrimaryKeyRelatedField(many=False, queryset=Movie.objects.all(),
+                                                 source="movie_id", required=False)
+    Text = serializers.CharField(max_length=long, source="text")
+    CreatedDate = serializers.DateField(format='%d %b %Y', input_formats=['iso-8601', '%d %b %Y'],
+                                        source="created_date")
+
+    class Meta:
+        model = Comment
+        fields = ("movie_id", "text", "created_date")
+
+    def create(self, validated_data):
+        comment = Comment.objects.create(**validated_data)
+        if "created_date" in validated_data.keys():
+            comment.created_date = validated_data["created_date"]
+        comment.save()
+        return comment
+
+    def update(self, instance, validated_data):
+        pass
 
 
 class RatingSerializer(serializers.Serializer):
