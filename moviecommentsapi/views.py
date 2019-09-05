@@ -26,7 +26,7 @@ def get_movies(request):
 
 def post_movies(request, details_provider):
     title = request.data.get("title")
-    if Movie.objects.filter(title=title).exists():
+    if Movie.objects.filter(title__iexact=title).exists():
         movie = Movie.objects.get(title=title)
         ms = MovieSerializer(movie)
         return JsonResponse(ms.data, status=status.HTTP_200_OK)
