@@ -23,7 +23,7 @@ class MoviesViewTests(APITestCase):
             Movie.objects.get(title="It")
         except Movie.DoesNotExist:
             self.fail(msg="Movie with proper title was not created.")
-        except Rating.MultipleObjectsReturned:
+        except Movie.MultipleObjectsReturned:
             self.fail(msg="Movie with given title was created multiple times.")
 
     def test_response_after_first_movie_post(self):
@@ -39,7 +39,7 @@ class MoviesViewTests(APITestCase):
             self.assertEqual(json.loads(response.content), expected_response)
         except Movie.DoesNotExist:
             self.fail(msg="Movie with proper title was not created.")
-        except Rating.MultipleObjectsReturned:
+        except Movie.MultipleObjectsReturned:
             self.fail(msg="Movie with given title was created multiple times.")
 
     def test_response_after_another_movie_post(self):
