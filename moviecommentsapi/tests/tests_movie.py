@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import Movie, Rating
+from ..models import Movie, Comment, Rating
 from .test_resources import MockMovieDetailsProvider
 
 

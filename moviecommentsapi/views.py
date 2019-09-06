@@ -6,8 +6,8 @@ from django.conf import settings
 from rest_framework.exceptions import APIException
 from rest_framework.utils import json
 
-from .models import Movie
-from .serializers import MovieSerializer
+from .models import Movie, Comment
+from .serializers import MovieSerializer, CommentSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -39,17 +39,44 @@ def post_movies(request, details_provider):
 @api_view(['GET', 'POST'])
 def comments(request):
     if request.method == 'GET':
-        return get_movies(request)
+        return get_comments(request)
     elif request.method == 'POST':
-        return post_movies(request)
+        return post_comments(request)
 
 
 def get_comments(request):
-    pass
+    if "Id" in request.query_params:
+        return get_comments_for_movie(request.query_params.get("Id"))
+    else:
+        return get_all_comments()
+
+
+def get_all_comments():
+    cs = CommentSerializer(Comment.objects.all(), many=True)
+    return JsonResponse(cs.data, status=status.HTTP_200_OK, safe=False)
+
+
+def get_comments_for_movie(movie_id):
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        cmnts = Comment.for_movie(movie)
+        cs = CommentSerializer(cmnts, many=True)
+        return JsonResponse(cs.data, status=status.HTTP_200_OK, safe=False)
+    except Movie.DoesNotExist:
+        return JsonResponse({"message": "movie with given id not found"},
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 def post_comments(request):
-    pass
+    movie_id = request.data.get("Id")
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        comment = movie.comments.create(text=request.data.get("Text"))
+        cs = CommentSerializer(comment)
+        return JsonResponse(cs.data, status=status.HTTP_201_CREATED)
+    except Movie.DoesNotExist:
+        return JsonResponse({"message": "movie with given id not found"},
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])

@@ -1,11 +1,11 @@
+import datetime
 from itertools import zip_longest
 
 from django.test import TestCase
-from rest_framework.utils import json
 
 from .test_resources import get_expected_api_response, get_expected_external_api_response, \
     get_saved_test_movie
-from ..serializers import MovieSerializer
+from ..serializers import MovieSerializer, CommentSerializer
 
 
 class MovieSerializerTests(TestCase):
@@ -14,11 +14,10 @@ class MovieSerializerTests(TestCase):
     def test_movie_serialization(self):
         """ MovieSerializer provided Movie object should be JSONable into given format. """
         movie = get_saved_test_movie()
-        movie.save()
         ms = MovieSerializer(movie)
         expected = get_expected_api_response()
         expected["Id"] = str(movie.pk)
-        self.assertEqual(json.dumps(ms.data), json.dumps(expected))
+        self.assertEqual(ms.data, expected)
 
     def test_movie_deserialization(self):
         """ MovieSerializer provided JSON api response should create Movie object
@@ -48,3 +47,27 @@ class MovieSerializerTests(TestCase):
                 self.assertEqual(rr.value, er.value)
             except AttributeError:
                 self.fail("rating lists uneven or incorrectly populated")
+
+
+class CommentSerializerTests(TestCase):
+
+    def test_comment_serialization(self):
+        movie = get_saved_test_movie()
+        comment = movie.comments.create(text="test comment")
+        comment.created_date = datetime.date(2019, 3, 10)
+        comment.save()
+        cs = CommentSerializer(comment)
+        expected = {"MovieId": movie.pk, "Text": "test comment", "CreatedDate": "10 Mar 2019"}
+        self.assertEqual(cs.data, expected)
+
+    def test_comment_deserialization(self):
+        movie = get_saved_test_movie()
+        comment_serialized = {"MovieId": movie.pk, "Text": "test comment",
+                              "CreatedDate": "10 Mar 2019"}
+        cs = CommentSerializer(data=comment_serialized)
+        cs.is_valid()
+        comment = cs.save()
+        self.assertEqual(comment.movie_id.pk, comment_serialized["MovieId"])
+        self.assertEqual(comment.text, comment_serialized["Text"])
+        self.assertEqual(comment.created_date.strftime('%d %b %Y'),
+                         comment_serialized["CreatedDate"])
