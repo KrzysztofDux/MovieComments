@@ -57,18 +57,26 @@ def get_all_comments():
 
 
 def get_comments_for_movie(movie_id):
-    if Movie.objects.filter(pk=movie_id).exists():
+    try:
         movie = Movie.objects.get(pk=movie_id)
         cmnts = Comment.for_movie(movie)
         cs = CommentSerializer(cmnts, many=True)
         return JsonResponse(cs.data, status=status.HTTP_200_OK, safe=False)
-    else:
+    except Movie.DoesNotExist:
         return JsonResponse({"message": "movie with given id not found"},
                             status=status.HTTP_404_NOT_FOUND)
 
 
 def post_comments(request):
-    pass
+    movie_id = request.data.get("Id")
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        comment = movie.comments.create(text=request.data.get("Text"))
+        cs = CommentSerializer(comment)
+        return JsonResponse(cs.data, status=status.HTTP_201_CREATED)
+    except Movie.DoesNotExist:
+        return JsonResponse({"message": "movie with given id not found"},
+                            status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
