@@ -27,15 +27,31 @@ def get_movies(request):
 
 
 def post_movies(request, details_provider):
-    title = request.data.get("title")
+    try:
+        title = request.data["title"]
+        return get_movie_by_title(title, details_provider)
+    except KeyError:
+        return JsonResponse({"message": "no movie title provided"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+def get_movie_by_title(title, details_provider):
     if Movie.objects.filter(title__iexact=title).exists():
-        movie = Movie.objects.get(title=title)
-        ms = MovieSerializer(movie)
-        return JsonResponse(ms.data, status=status.HTTP_200_OK)
+        return handle_existing_movie(title)
     else:
-        movie = Movie.create(title, details_provider)
-        ms = MovieSerializer(movie)
-        return JsonResponse(ms.data, status=status.HTTP_201_CREATED)
+        return handle_new_movie(title, details_provider)
+
+
+def handle_existing_movie(title):
+    movie = Movie.objects.get(title=title)
+    ms = MovieSerializer(movie)
+    return JsonResponse(ms.data, status=status.HTTP_200_OK)
+
+
+def handle_new_movie(title, details_provider):
+    movie = Movie.create(title, details_provider)
+    ms = MovieSerializer(movie)
+    return JsonResponse(ms.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET', 'POST'])
@@ -70,15 +86,21 @@ def get_comments_for_movie(movie_id):
 
 
 def post_comments(request):
-    movie_id = request.data.get("id")
     try:
-        movie = Movie.objects.get(pk=movie_id)
-        comment = movie.comments.create(text=request.data.get("text"))
-        cs = CommentSerializer(comment)
-        return JsonResponse(cs.data, status=status.HTTP_201_CREATED)
+        create_comment(request)
     except Movie.DoesNotExist:
         return JsonResponse({"message": "movie with given id not found"},
                             status=status.HTTP_404_NOT_FOUND)
+    except KeyError:
+        return JsonResponse({"message": "no movie id provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_comment(request):
+    movie_id = request.data["id"]
+    movie = Movie.objects.get(pk=movie_id)
+    comment = movie.comments.create(text=request.data["text"])
+    cs = CommentSerializer(comment)
+    return JsonResponse(cs.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -105,8 +127,9 @@ def get_ranking(date_from, date_to):
     rank = 1
     for i, movie in enumerate(ranking):
         movie.update({"Rank": rank})
-        if i+1 <= (len(ranking)-1) and movie["TotalComments"] != ranking[i + 1]["TotalComments"]:
-                rank += 1
+        if i + 1 <= (len(ranking) - 1) and movie["TotalComments"] != ranking[i + 1][
+            "TotalComments"]:
+            rank += 1
     return ranking
 
 
