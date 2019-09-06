@@ -64,6 +64,15 @@ class Comment(models.Model):
         return list(Comment.objects.filter(movie_id=movie.pk, created_date__gte=date_from,
                                            created_date__lte=date_to))
 
+    @staticmethod
+    def sum_for_movie_in_range(movie, date_from, date_to):
+        return Comment.objects.filter(movie_id=movie.pk, created_date__gte=date_from,
+                                      created_date__lte=date_to).count()
+
+    @staticmethod
+    def in_range(date_from, date_to):
+        return list(Comment.objects.filter(created_date__gte=date_from, created_date__lte=date_to))
+
     movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateField(auto_now_add=True)
     text = models.TextField()
