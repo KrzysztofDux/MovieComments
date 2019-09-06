@@ -78,6 +78,7 @@ class CommentsViewTests(APITestCase):
 
         for resp, exp in zip(response_content, expected):
             self.assertDictEqual(resp, exp)
+        self.assertEqual(len(response_content), 2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_comments_get_movie_id_not_found(self):
