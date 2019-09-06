@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.utils import json
 
-from ..views import post_movies
+from ..views.movies import post_movies
 from ..models import Movie
 from .test_resources import MockMovieDetailsProvider, get_expected_api_response, get_saved_test_movie
 
