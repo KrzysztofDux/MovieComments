@@ -73,7 +73,7 @@ class CommentsViewTests(APITestCase):
                  "CreatedDate": now})
         expected = sorted(expected, key=lambda k: k['Text'])
 
-        response = self.client.get(f"{self.get_url()}?Id={another_movie.pk}", format='json')
+        response = self.client.get(f"{self.get_url()}?id={another_movie.pk}", format='json')
         response_content = sorted(json.loads(response.content), key=lambda k: k['Text'])
 
         for resp, exp in zip(response_content, expected):
@@ -83,7 +83,7 @@ class CommentsViewTests(APITestCase):
 
     def test_comments_get_movie_id_not_found(self):
         movie = get_saved_test_movie()
-        response = self.client.get(f"{self.get_url()}?Id={movie.pk + 1}", format='json')
+        response = self.client.get(f"{self.get_url()}?id={movie.pk + 1}", format='json')
         self.assertEqual(json.loads(response.content).get("message"),
                          "movie with given id not found")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -91,7 +91,7 @@ class CommentsViewTests(APITestCase):
     def test_comments_post(self):
         movie = get_saved_test_movie()
         another_movie = get_saved_test_movie()
-        data = {"Id": movie.pk, "Text": "test comment 1"}
+        data = {"id": movie.pk, "text": "test comment 1"}
         expected = {'MovieId': movie.pk, 'Text': 'test comment 1', 'CreatedDate': '06 Sep 2019'}
         response = self.client.post(self.get_url(), data, format='json')
         self.assertEqual(json.loads(response.content), expected)
@@ -102,7 +102,7 @@ class CommentsViewTests(APITestCase):
 
     def test_comments_post_movie_id_not_found(self):
         movie = get_saved_test_movie()
-        data = {"Id": movie.pk + 1, "Text": "test comment 1"}
+        data = {"id": movie.pk + 1, "text": "test comment 1"}
         response = self.client.post(self.get_url(), data, format='json')
         self.assertEqual(json.loads(response.content).get("message"),
                          "movie with given id not found")

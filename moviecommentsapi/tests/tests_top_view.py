@@ -16,7 +16,7 @@ class TopViewTests(APITestCase):
 
     @staticmethod
     def get_url_with_params(date_from, date_to):
-        return f'/top/?From={date_from.strftime("%d %b %Y")}&To={date_to.strftime("%d %b %Y")}'
+        return f'/top/?from={date_from.strftime("%d %b %Y")}&to={date_to.strftime("%d %b %Y")}'
 
     @staticmethod
     def get_comment_with_date(movie, created_date):

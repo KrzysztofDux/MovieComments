@@ -47,8 +47,8 @@ def comments(request):
 
 
 def get_comments(request):
-    if "Id" in request.query_params:
-        return get_comments_for_movie(request.query_params.get("Id"))
+    if "id" in request.query_params:
+        return get_comments_for_movie(request.query_params.get("id"))
     else:
         return get_all_comments()
 
@@ -70,10 +70,10 @@ def get_comments_for_movie(movie_id):
 
 
 def post_comments(request):
-    movie_id = request.data.get("Id")
+    movie_id = request.data.get("id")
     try:
         movie = Movie.objects.get(pk=movie_id)
-        comment = movie.comments.create(text=request.data.get("Text"))
+        comment = movie.comments.create(text=request.data.get("text"))
         cs = CommentSerializer(comment)
         return JsonResponse(cs.data, status=status.HTTP_201_CREATED)
     except Movie.DoesNotExist:
@@ -83,8 +83,8 @@ def post_comments(request):
 
 @api_view(['GET'])
 def top(request):
-    if all(param in request.query_params for param in ("From", "To")):
-        date_from, date_to = request.query_params.get("From"), request.query_params.get("To")
+    if all(param in request.query_params for param in ("from", "to")):
+        date_from, date_to = request.query_params.get("from"), request.query_params.get("to")
         date_from, date_to = datetime.strptime(date_from, '%d %b %Y'), datetime.strptime(date_to,
                                                                                          '%d %b %Y')
         return JsonResponse(get_ranking(date_from, date_to), safe=False)
