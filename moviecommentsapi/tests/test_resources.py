@@ -96,3 +96,7 @@ def get_saved_test_movie():
 class MockMovieDetailsProvider:
     def get_details(self, title):
         return get_expected_external_api_response()
+
+    def get_formal_title(self, title):
+        """ to avoid Movie.DuplicateError """
+        return "ABC"

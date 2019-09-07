@@ -13,12 +13,16 @@ class Movie(models.Model):
         try:
             return cls.__create_movie_with_details_from_provider(title, details_provider)
         except AttributeError:
-            raise ValueError("details_provider must provide get_details(str) method")
+            raise ValueError(
+                "details_provider must provide get_details(str) method and get_formal_title(str)")
 
     @staticmethod
     def __create_movie_with_details_from_provider(title, details_provider):
         from .serializers import MovieSerializer
         details = details_provider.get_details(title)
+        formal_title = details_provider.get_formal_title(title)
+        if Movie.objects.filter(title=formal_title).exists():
+            raise Movie.DuplicateError
         serializer = MovieSerializer(data=details)
         serializer.is_valid(True)
         return serializer.save()
@@ -46,6 +50,11 @@ class Movie(models.Model):
     box_office = models.CharField(max_length=medium)
     production = models.CharField(max_length=medium)
     website = models.CharField(max_length=long)
+
+    class DuplicateError(Exception):
+        """ Movie already exists in database. Uniqueness ensured
+        this way to greatly reduce complexity of testing. """
+        pass
 
 
 class Rating(models.Model):

@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', default='foo')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DEBUG', default=0))
+DEBUG = bool(os.environ.get('DEBUG', default=1))
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'protected-taiga-02939.herokuapp.com']
 
