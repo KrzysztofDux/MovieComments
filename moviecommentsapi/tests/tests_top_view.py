@@ -1,4 +1,5 @@
 import datetime
+from itertools import zip_longest
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -107,10 +108,32 @@ class TopViewTests(APITestCase):
         self.check_result_for(dates[0] - datetime.timedelta(days=2),
                               dates[-2] + datetime.timedelta(days=2), expected)
 
-    def check_result_for(self, date_from, date_to, expected):
-        response_on_edges = self.client.get(self.get_url_with_params(date_from, date_to),
-                                            format='json')
-        for rank, exp in zip(json.loads(response_on_edges.content), expected):
+    def test_top_with_include_all(self):
+        """ If include_all flag is provided and set to True, films without comments
+        in given range should also be included in ranking. """
+        movie = get_saved_test_movie()
+        second_movie = get_saved_test_movie()
+        dates = [datetime.date(2019, 8, 5), datetime.date(2019, 8, 15), datetime.date(2019, 8, 20),
+                 datetime.date(2019, 9, 1), datetime.date(2019, 9, 5)]
+        for i, date in enumerate(dates):
+            self.get_comment_with_date(movie if i % 2 == 0 else second_movie, date)
+
+        third_movie = get_saved_test_movie()
+        date_out_of_range = dates[-1] + datetime.timedelta(days=5)
+        self.get_comment_with_date(third_movie, date_out_of_range)
+
+        expected = [{"MovieId": second_movie.pk, "TotalComments": 2, "Rank": 1},
+                    {"MovieId": movie.pk, "TotalComments": 1, "Rank": 2},
+                    {"MovieId": third_movie.pk, "TotalComments": 0, "Rank": 3}]
+
+        self.check_result_for(dates[1], dates[-2], expected, include_all=True)
+
+    def check_result_for(self, date_from, date_to, expected, include_all=False):
+        url = self.get_url_with_params(date_from, date_to)
+        if include_all:
+            url += "&include_all=True"
+        response_on_edges = self.client.get(url, format='json')
+        for rank, exp in zip_longest(json.loads(response_on_edges.content), expected):
             self.assertDictEqual(rank, exp)
 
     def test_top_for_call_without_date_range(self):
