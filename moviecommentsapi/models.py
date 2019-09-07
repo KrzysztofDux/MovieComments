@@ -1,6 +1,7 @@
 from django.db import models
 
 # CharField max_lengths
+
 short, medium, long = 30, 150, 300
 
 
@@ -49,8 +50,8 @@ class Movie(models.Model):
 
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
-    source = models.CharField(max_length=medium)
-    value = models.CharField(max_length=short)
+    source = models.CharField(max_length=50)
+    value = models.CharField(max_length=10)
 
 
 class Comment(models.Model):
