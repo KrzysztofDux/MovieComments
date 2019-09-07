@@ -46,7 +46,8 @@ def post_comments(request):
         return JsonResponse({"message": "movie with given id not found"},
                             status=status.HTTP_404_NOT_FOUND)
     except KeyError:
-        return JsonResponse({"message": "no movie id provided"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({"message": "no movie id or no comment text provided"},
+                            status=status.HTTP_400_BAD_REQUEST)
     except ValueError:
         return JsonResponse({"message": "wrong id provided"}, status=status.HTTP_400_BAD_REQUEST)
 
