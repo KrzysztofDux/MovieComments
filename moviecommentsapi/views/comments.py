@@ -30,6 +30,8 @@ def get_comments_for_movie(movie_id):
     except Movie.DoesNotExist:
         return JsonResponse({"message": "movie with given id not found"},
                             status=status.HTTP_404_NOT_FOUND)
+    except ValueError:
+        return JsonResponse({"message": "wrong id provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_all_comments():
@@ -45,6 +47,8 @@ def post_comments(request):
                             status=status.HTTP_404_NOT_FOUND)
     except KeyError:
         return JsonResponse({"message": "no movie id provided"}, status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        return JsonResponse({"message": "wrong id provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def create_comment(request):
