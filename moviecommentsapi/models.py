@@ -1,7 +1,7 @@
 from django.db import models
 
 # CharField max_lengths
-short, medium, long = 10, 50, 300
+short, medium, long = 30, 150, 300
 
 
 class Movie(models.Model):
@@ -34,7 +34,7 @@ class Movie(models.Model):
     plot = models.CharField(max_length=long)
     language = models.CharField(max_length=medium)
     country = models.CharField(max_length=medium)
-    awards = models.CharField(max_length=medium)
+    awards = models.CharField(max_length=long)
     poster = models.CharField(max_length=long)
     metascore = models.IntegerField()
     imdb_rating = models.DecimalField(decimal_places=1, max_digits=4)
