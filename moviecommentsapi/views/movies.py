@@ -32,6 +32,8 @@ def post_movies(request, details_provider):
     except KeyError:
         return JsonResponse({"message": "no movie title provided"},
                             status=status.HTTP_400_BAD_REQUEST)
+    except (APIException, ConnectionError) as e:
+        return JsonResponse({"message": str(e)}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 
 def get_movie_by_title(title, details_provider):

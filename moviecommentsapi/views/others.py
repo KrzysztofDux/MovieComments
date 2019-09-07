@@ -21,7 +21,7 @@ def top(request):
 
 def get_ranking(date_from, date_to):
     cmnts = Comment.in_range(date_from, date_to)
-    mvs = list(set([comment.movie_id for comment in cmnts]))
+    mvs = list(set([comment.movie for comment in cmnts]))
     ranking = list()
     for movie in mvs:
         ranking.append({"MovieId": movie.pk,
@@ -31,7 +31,7 @@ def get_ranking(date_from, date_to):
     rank = 1
     for i, movie in enumerate(ranking):
         movie.update({"Rank": rank})
-        if i + 1 <= (len(ranking) - 1) and movie["TotalComments"] != ranking[i + 1][
-            "TotalComments"]:
+        is_last_iter = i + 1 <= (len(ranking) - 1)
+        if is_last_iter and movie["TotalComments"] != ranking[i + 1]["TotalComments"]:
             rank += 1
     return ranking

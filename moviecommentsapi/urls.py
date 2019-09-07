@@ -1,6 +1,5 @@
 from django.urls import path
 
-# from .views import movies, comments, other
 from .views.movies import movies
 from .views.comments import comments
 from .views.others import top

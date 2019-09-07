@@ -48,7 +48,7 @@ class Movie(models.Model):
 
 
 class Rating(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='ratings')
     source = models.CharField(max_length=medium)
     value = models.CharField(max_length=short)
 
@@ -57,22 +57,22 @@ class Comment(models.Model):
 
     @staticmethod
     def for_movie(movie):
-        return list(Comment.objects.filter(movie_id=movie.pk))
+        return list(Comment.objects.filter(movie=movie))
 
     @staticmethod
     def for_movie_in_range(movie, date_from, date_to):
-        return list(Comment.objects.filter(movie_id=movie.pk, created_date__gte=date_from,
+        return list(Comment.objects.filter(movie=movie, created_date__gte=date_from,
                                            created_date__lte=date_to))
 
     @staticmethod
     def sum_for_movie_in_range(movie, date_from, date_to):
-        return Comment.objects.filter(movie_id=movie.pk, created_date__gte=date_from,
+        return Comment.objects.filter(movie=movie, created_date__gte=date_from,
                                       created_date__lte=date_to).count()
 
     @staticmethod
     def in_range(date_from, date_to):
         return list(Comment.objects.filter(created_date__gte=date_from, created_date__lte=date_to))
 
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateField(auto_now_add=True)
     text = models.TextField()

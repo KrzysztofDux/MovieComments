@@ -67,7 +67,7 @@ class CommentSerializerTests(TestCase):
         cs = CommentSerializer(data=comment_serialized)
         cs.is_valid()
         comment = cs.save()
-        self.assertEqual(comment.movie_id.pk, comment_serialized["MovieId"])
+        self.assertEqual(comment.movie.pk, comment_serialized["MovieId"])
         self.assertEqual(comment.text, comment_serialized["Text"])
         self.assertEqual(comment.created_date.strftime('%d %b %Y'),
                          comment_serialized["CreatedDate"])
