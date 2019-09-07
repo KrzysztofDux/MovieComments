@@ -12,7 +12,6 @@ class MovieSerializerTests(TestCase):
     maxDiff = None
 
     def test_movie_serialization(self):
-        """ MovieSerializer provided Movie object should be JSONable into given format. """
         movie = get_saved_test_movie()
         ms = MovieSerializer(movie)
         expected = get_expected_api_response()
@@ -20,8 +19,6 @@ class MovieSerializerTests(TestCase):
         self.assertEqual(ms.data, expected)
 
     def test_movie_deserialization(self):
-        """ MovieSerializer provided JSON api response should create Movie object
-            with correct attributes values and related Rating objects """
         ms = MovieSerializer(data=get_expected_external_api_response())
         ms.is_valid()
         movie = ms.save()

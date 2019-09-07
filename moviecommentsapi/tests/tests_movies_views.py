@@ -61,13 +61,10 @@ class MoviesViewTests(APITestCase):
         """ If GET request is received, list of all movies should be returned. """
         movie = get_saved_test_movie()
         response = self.client.get(self.get_url(), format='json')
-        try:
-            expected = get_expected_api_response()
-            expected["Id"] = movie.pk
-            expected = [expected]
-            self.assertEqual(json.loads(response.content), expected)
-        except KeyError:
-            "Id not set"
+        expected = get_expected_api_response()
+        expected["Id"] = movie.pk
+        expected = [expected]
+        self.assertEqual(json.loads(response.content), expected)
 
     @skip("Dependent on external calls. Can be run as a sanity check once in a while.")
     def test_response_after_first_movie_post_with_external_call(self):

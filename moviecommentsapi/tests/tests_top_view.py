@@ -26,6 +26,9 @@ class TopViewTests(APITestCase):
         return comment
 
     def test_top_with_two_movies_no_comments_outside_range(self):
+        """ Top should return ranking of movies by sum of their comments
+        added in the provided date range. If all comments have created_date
+        inside range, all should be taken into account. """
         movie = get_saved_test_movie()
         another_movie = get_saved_test_movie()
         dates = [datetime.date(2019, 8, 5), datetime.date(2019, 8, 15), datetime.date(2019, 8, 20),
@@ -41,6 +44,9 @@ class TopViewTests(APITestCase):
                               dates[-1] + datetime.timedelta(days=2), expected)
 
     def test_top_with_two_movies_with_comments_outside_range(self):
+        """ Top should return ranking of movies by sum of their comments
+        added in the provided date range. If some comments have created_date
+        outside range, they shouldn't be taken into account. """
         movie = get_saved_test_movie()
         second_movie = get_saved_test_movie()
         dates = [datetime.date(2019, 8, 5), datetime.date(2019, 8, 15), datetime.date(2019, 8, 20),
@@ -61,6 +67,9 @@ class TopViewTests(APITestCase):
                               dates[-2] + datetime.timedelta(days=2), expected)
 
     def test_top_with_two_movies_no_comments_outside_range_rank_draw(self):
+        """ Top should return ranking of movies by sum of their comments
+        added in the provided date range. If in given date range both movies
+        got the same number of comments, they should have the same rank. """
         movie = get_saved_test_movie()
         another_movie = get_saved_test_movie()
         dates = [datetime.date(2019, 8, 5), datetime.date(2019, 8, 15), datetime.date(2019, 8, 20),
@@ -76,6 +85,9 @@ class TopViewTests(APITestCase):
                               dates[-1] + datetime.timedelta(days=2), expected)
 
     def test_top_with_two_movies_with_comments_outside_range_rank_draw(self):
+        """ Top should return ranking of movies by sum of their comments
+        added in the provided date range. If in given date range both movies
+        got the same number of comments, they should have the same rank. """
         movie = get_saved_test_movie()
         second_movie = get_saved_test_movie()
         dates = [datetime.date(2019, 8, 5), datetime.date(2019, 8, 15), datetime.date(2019, 8, 20),
@@ -102,6 +114,7 @@ class TopViewTests(APITestCase):
             self.assertDictEqual(rank, exp)
 
     def test_top_for_call_without_date_range(self):
+        """ Top should return ranking of movies only if date range is provided. """
         response = self.client.get(self.get_url(), format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content).get("message"), "no date range provided")
