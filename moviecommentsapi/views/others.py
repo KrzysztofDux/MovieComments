@@ -13,17 +13,30 @@ def top(request):
         date_from, date_to = request.query_params.get("from"), request.query_params.get("to")
         date_from, date_to = datetime.strptime(date_from, '%d %b %Y'), datetime.strptime(date_to,
                                                                                          '%d %b %Y')
-        return JsonResponse(get_ranking(date_from, date_to), safe=False)
+        include_all = include_all_param_to_bool(request.query_params)
+        return JsonResponse(get_ranking(date_from, date_to, include_all), safe=False)
     else:
         return JsonResponse({"message": "no date range provided"},
                             status=status.HTTP_400_BAD_REQUEST)
 
 
-def get_ranking(date_from, date_to):
-    cmnts = Comment.in_range(date_from, date_to)
-    mvs = list(set([comment.movie for comment in cmnts]))
+def include_all_param_to_bool(req_params):
+    if req_params.get('include_all') in ('True', 'true', 't', 'Yes', 'yes', 'y', '1'):
+        return True
+    return False
+
+
+def get_ranking(date_from, date_to, include_all):
+    if include_all:
+        return prepare_ranking(date_from, date_to, Movie.objects.all())
+    comments = Comment.in_range(date_from, date_to)
+    movies = list(set([comment.movie for comment in comments]))
+    return prepare_ranking(date_from, date_to, movies)
+
+
+def prepare_ranking(date_from, date_to, movies):
     ranking = list()
-    for movie in mvs:
+    for movie in movies:
         ranking.append({"MovieId": movie.pk,
                         "TotalComments": Comment.sum_for_movie_in_range(movie, date_from, date_to)})
     ranking.sort(key=lambda m: m["MovieId"])
