@@ -46,7 +46,7 @@ class CommentsViewTests(APITestCase):
         for i in range(1, 3):
             expected.append({"MovieId": movie.pk, "Text": f"test comment {i}", "CreatedDate": now})
         expected.append({"MovieId": another_movie.pk, "Text": "test comment for another movie 1",
-                          "CreatedDate": now})
+                         "CreatedDate": now})
         expected = sorted(expected, key=lambda k: k['Text'])
 
         response = self.client.get(self.get_url(), format='json')
@@ -92,7 +92,8 @@ class CommentsViewTests(APITestCase):
         movie = get_saved_test_movie()
         another_movie = get_saved_test_movie()
         data = {"id": movie.pk, "text": "test comment 1"}
-        expected = {'MovieId': movie.pk, 'Text': 'test comment 1', 'CreatedDate': '06 Sep 2019'}
+        expected = {'MovieId': movie.pk, 'Text': 'test comment 1',
+                    'CreatedDate': datetime.date.today().strftime('%d %b %Y')}
         response = self.client.post(self.get_url(), data, format='json')
         self.assertEqual(json.loads(response.content), expected)
         self.assertEqual(len(Comment.for_movie(movie)), 1)

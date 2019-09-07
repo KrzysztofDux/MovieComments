@@ -16,7 +16,7 @@ class MovieSerializerTests(TestCase):
         movie = get_saved_test_movie()
         ms = MovieSerializer(movie)
         expected = get_expected_api_response()
-        expected["Id"] = str(movie.pk)
+        expected["Id"] = movie.pk
         self.assertEqual(ms.data, expected)
 
     def test_movie_deserialization(self):

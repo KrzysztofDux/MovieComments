@@ -41,7 +41,7 @@ class RatingSerializer(serializers.Serializer):
 
 
 class MovieSerializer(serializers.Serializer):
-    Id = serializers.CharField(required=False, max_length=medium, read_only=True, source="pk")
+    Id = serializers.IntegerField(required=False, read_only=True, source="pk")
     Title = serializers.CharField(max_length=long, source="title")
     Year = serializers.CharField(max_length=short, source="year")
     Rated = serializers.CharField(max_length=short, source="rated")

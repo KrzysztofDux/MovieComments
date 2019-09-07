@@ -37,7 +37,7 @@ class MoviesViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         try:
             movie = Movie.objects.get(title="It")
-            expected_response["Id"] = str(movie.pk)
+            expected_response["Id"] = movie.pk
             self.assertEqual(json.loads(response.content), expected_response)
         except Movie.DoesNotExist:
             self.fail(msg="Movie with proper title was not created.")
@@ -54,7 +54,7 @@ class MoviesViewTests(APITestCase):
         another_response = post_movies(MockRequest(data), MockMovieDetailsProvider())
         self.assertEqual(another_response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(Movie.objects.all()), 1)
-        expected_response["Id"] = str(Movie.objects.first().pk)
+        expected_response["Id"] = Movie.objects.first().pk
         self.assertDictEqual(json.loads(another_response.content), expected_response)
 
     def test_movies_get(self):
@@ -63,7 +63,7 @@ class MoviesViewTests(APITestCase):
         response = self.client.get(self.get_url(), format='json')
         try:
             expected = get_expected_api_response()
-            expected["Id"] = str(movie.pk)
+            expected["Id"] = movie.pk
             expected = [expected]
             self.assertEqual(json.loads(response.content), expected)
         except KeyError:
@@ -78,7 +78,7 @@ class MoviesViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         try:
             movie = Movie.objects.get(title="Shrek")
-            self.assertEqual(json.loads(response.content).get("Id"), str(movie.pk))
+            self.assertEqual(json.loads(response.content).get("Id"), movie.pk)
             self.assertEqual(json.loads(response.content).get("Year"), "2001")
             self.assertEqual(json.loads(response.content).get("Genre"), "Animation, Adventure, Comedy, Family, Fantasy")
             self.assertEqual(json.loads(response.content).get("Awards"), "Won 1 Oscar. Another 36 wins & 60 nominations.")
