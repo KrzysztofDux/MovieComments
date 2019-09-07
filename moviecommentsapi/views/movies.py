@@ -21,8 +21,25 @@ def movies(request):
 
 
 def get_movies(request):
-    ms = MovieSerializer(Movie.objects.all(), many=True)
-    return JsonResponse(ms.data, status=status.HTTP_200_OK, safe=False)
+    mvs = MovieSerializer(Movie.objects.all(), many=True).data
+    sort_key = get_sorter(request.query_params)
+    if sort_key:
+        mvs.sort(key=sort_key)
+    return JsonResponse(mvs, status=status.HTTP_200_OK, safe=False)
+
+
+def get_sorter(query_params):
+    param = query_params.get("sort")
+    year_flags = ("year", "Year", "y", "Y")
+    title_flags = ("title", "Title", "t", "T")
+    both_flags = [f"{y}{t}" for y, t in zip(year_flags, title_flags)]
+    if param in both_flags:
+            return lambda m: (m["Year"], m["Title"])
+    elif param in year_flags:
+        return lambda m: m["Year"]
+    elif param in title_flags:
+        return lambda m: m["Title"]
+    return False
 
 
 def post_movies(request, details_provider):
