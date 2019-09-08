@@ -4,7 +4,7 @@ from django.db import models
 
 # CharField max_lengths
 
-short, medium, long = 30, 150, 300
+short, medium, long = 30, 300, 600
 
 
 class Movie(models.Model):
