@@ -75,11 +75,6 @@ class MovieSerializer(serializers.Serializer):
                   "box_office", "production", "website")
 
     def create(self, validated_data):
-        if "pk" in validated_data.keys():
-            validated_data['pk'] = str(validated_data['year'])
-        validated_data['year'] = int(validated_data['year'])
-        validated_data['metascore'] = int(validated_data['metascore'])
-        validated_data['imdb_rating'] = float(validated_data['imdb_rating'])
         with transaction.atomic():
             ratings_data = validated_data.pop("ratings")
             movie = Movie.objects.create(**validated_data)

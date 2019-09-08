@@ -60,7 +60,7 @@ def get_saved_test_movie():
     with transaction.atomic():
         movie = Movie.objects.create(
             title="It",
-            year=2017,
+            year="2017",
             rated="R",
             released="08 Sep 2017",
             runtime="135 min",
@@ -73,8 +73,8 @@ def get_saved_test_movie():
             country="USA, Canada",
             awards="4 wins & 30 nominations.",
             poster="https://m.media-amazon.com/images/M/MV5BZDVkZmI0YzAtNzdjYi00ZjhhLWE1ODEtMWMzMWMzNDA0NmQ4XkEyXkFqcGdeQXVyNzYzODM3Mzg@._V1_SX300.jpg",
-            metascore=69,
-            imdb_rating=7.4,
+            metascore="69",
+            imdb_rating="7.4",
             imdb_votes="376,032",
             imdb_id="tt1396484",
             type="movie",
