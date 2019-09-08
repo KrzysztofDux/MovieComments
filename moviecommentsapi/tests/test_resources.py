@@ -1,5 +1,6 @@
 from django.db import transaction
 
+from ..serializers import MovieSerializer
 from ..models import Movie
 
 
@@ -93,10 +94,13 @@ def get_saved_test_movie():
     return movie
 
 
-class MockMovieDetailsProvider:
+class MockMovieDetailsProvider(Movie.AbstractDetailsProvider):
     def get_details(self, title):
         return get_expected_external_api_response()
 
     def get_formal_title(self, title):
         """ to avoid Movie.DuplicateError """
         return "ABC"
+
+    def get_serializer(self, **kwargs):
+        return MovieSerializer(**kwargs)

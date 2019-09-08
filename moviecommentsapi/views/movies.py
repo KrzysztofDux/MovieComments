@@ -83,7 +83,7 @@ def handle_new_movie(title, details_provider):
     return JsonResponse(ms.data, status=status.HTTP_201_CREATED)
 
 
-class OMDbDetailsProvider:
+class OMDbDetailsProvider(Movie.AbstractDetailsProvider):
     def __init__(self):
         self.__details = None
 
@@ -104,3 +104,6 @@ class OMDbDetailsProvider:
 
     def get_formal_title(self, title):
         return self.get_details(title).get("Title")
+
+    def get_serializer(self, **kwargs):
+        return MovieSerializer(**kwargs)

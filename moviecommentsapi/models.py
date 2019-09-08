@@ -1,3 +1,5 @@
+import abc
+
 from django.db import models
 
 # CharField max_lengths
@@ -6,24 +8,20 @@ short, medium, long = 30, 150, 300
 
 
 class Movie(models.Model):
-    default_details_provider = None
 
     @classmethod
-    def create(cls, title, details_provider=default_details_provider):
-        try:
-            return cls.__create_movie_with_details_from_provider(title, details_provider)
-        except AttributeError:
-            raise ValueError(
-                "details_provider must provide get_details(str) method and get_formal_title(str)")
+    def create(cls, title, details_provider):
+        if not isinstance(details_provider, Movie.AbstractDetailsProvider):
+            raise TypeError("details_provider must implement Movie.AbstractDetailsProvider.")
+        return cls.__create_movie_with_details_from_provider(title, details_provider)
 
     @staticmethod
     def __create_movie_with_details_from_provider(title, details_provider):
-        from .serializers import MovieSerializer
         details = details_provider.get_details(title)
         formal_title = details_provider.get_formal_title(title)
         if Movie.objects.filter(title=formal_title).exists():
             raise Movie.DuplicateError
-        serializer = MovieSerializer(data=details)
+        serializer = details_provider.get_serializer(data=details)
         serializer.is_valid(True)
         return serializer.save()
 
@@ -55,6 +53,16 @@ class Movie(models.Model):
         """ Movie already exists in database. Uniqueness ensured
         this way to greatly reduce complexity of testing. """
         pass
+
+    class AbstractDetailsProvider(metaclass=abc.ABCMeta):
+        def get_details(self, title):
+            pass
+
+        def get_formal_title(self, title):
+            pass
+
+        def get_serializer(self, **kwargs):
+            pass
 
 
 class Rating(models.Model):
