@@ -34,6 +34,6 @@ There are following endpoints available:
 | ---------- | ---------------      | --------------- | --------
 | `/movies/` |                      | `sort`          | Returns list of all movies saved in application's database. Setting `sort` to value of `T`/`t` or `(T/t)itle` will sort the results by title alphabetically. `Y`/`y` or `(Y/y)ear` will sort by year, ascending. `yt`/`YT`/`(Y/y)ear(T/t)itle` will sort by year and then by title. Other combinations will be ignored.
 |`/comments/`|                      | `id`            | Returns list of all comments with corresponding movies' IDs. Setting `id` to movie's ID will filter comments only related to given movie.
-| `/top/`    |`date_from`, `date_to`| `include_all`   | Returns ranking of movies, based on number of comments they received in date range provided in `date_from` and `date_to` params. Setting `include_all` to `T/t`, `Y/y`, `(T/t)rue` or `(Y/y)es` will include movies that didn't get any comments in given period.
+| `/top/`    |`date_from`, `date_to`| `include_all`   | Returns ranking of movies, based on number of comments they received in date range provided in `date_from` and `date_to` params. Setting `include_all` to `T`/`t`, `Y`/`y`, `(T/t)rue` or `(Y/y)es` will include movies that didn't get any comments in given period.
 
 
