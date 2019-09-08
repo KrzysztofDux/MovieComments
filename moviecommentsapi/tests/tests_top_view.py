@@ -141,3 +141,22 @@ class TopViewTests(APITestCase):
         response = self.client.get(self.get_url(), format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(json.loads(response.content).get("message"), "no date range provided")
+
+    def test_top_for_call_without_one_date_boundary(self):
+        """ Top should return ranking of movies only if date range is provided. """
+        response = self.client.get(f"{self.get_url()}?from=06 Sep 2019", format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(json.loads(response.content).get("message"), "no date range provided")
+
+    def test_top_for_call_with_wrong_date_format(self):
+        """ Top should return ranking of movies only if date range is provided. """
+        response = self.client.get(f"{self.get_url()}?from=abc&to=123", format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(json.loads(response.content).get("message"), "wrong date format provided")
+
+    def test_top_for_call_with_one_param_empty(self):
+        """ Top should return ranking of movies only if date range is provided. """
+        response = self.client.get(f"{self.get_url()}?from=06 Sep 2019&to=", format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(json.loads(response.content).get("message"), "wrong date format provided")
+
